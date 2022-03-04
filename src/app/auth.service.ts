@@ -708,8 +708,6 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'TaxGroup/GetTaxGrp?CompanyId=' + CompanyId)
   }
 
-  // Master
-  // 28-01-2022
 
   Categoryupdate(Id, active, CompanyId) {
     return this.http.get(

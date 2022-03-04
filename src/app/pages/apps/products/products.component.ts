@@ -96,10 +96,10 @@ export class ProductsComponent implements OnInit {
       this.CompanyId = this.loginfo.CompanyId
       this.StoreId = this.loginfo.StoreId
       console.log(this.loginfo)
-      this.getMasterproduct()
-      this.gettax()
+      this.getMasterproduct()     
       this.getproducttype()
       this.getUnits()
+      this.gettax()
       // this.getKotGroups()
       this.getCategories()
     })
@@ -152,10 +152,10 @@ export class ProductsComponent implements OnInit {
     })
   }
   gettax() {
-    this.Auth.GetTaxGrp(this.CompanyId).subscribe(data => {
+    this.Auth.GetTaxGrp(this.loginfo.companyId).subscribe(data => {
       this.taxgroups = data
       this.product.taxGroupId = this.taxgroups[0].id
-      // console.log(this.taxgroups);
+      console.log(this.taxgroups);
     })
   }
   getproduct(id) {
