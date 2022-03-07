@@ -179,7 +179,7 @@ export class SaleComponent implements OnInit {
       this.getproducts()
       this.getcustomers()
       this.GetStorePaymentType()
-      // this.temporaryItem.Quantity = 0
+      this.temporaryItem.Quantity = 0
       this.products.forEach(product => {
         product.Quantity = 0
         product.tax = 0
@@ -290,7 +290,7 @@ export class SaleComponent implements OnInit {
   getcustomers() {
     this.Auth.getcustomers().subscribe(data => {
       this.customers = data
-      console.log(data)
+      // console.log(data)
     })
   }
   savedata() {
@@ -378,7 +378,7 @@ export class SaleComponent implements OnInit {
   }
 
   submitted: boolean = false
-  batches:any = [];
+  batches: any = [];
   batchno = 0;
   addItem() {
     this.submitted = true
@@ -393,7 +393,7 @@ export class SaleComponent implements OnInit {
         if (product.stockBatchId == this.temporaryItem['stockBatchId']) {
           product.quantity -= this.temporaryItem.Quantity
           Object.keys(product).forEach(key => {
-            this.temporaryItem[key] = product[key]      
+            this.temporaryItem[key] = product[key]
 
           })
         }
@@ -591,13 +591,13 @@ export class SaleComponent implements OnInit {
   saveOrder() {
     console.log(this.order)
     this.order.OrderNo = this.orderkey.orderno
-    this.order.BillDate = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.CreatedDate = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.BillDateTime = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.OrderedDate = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.BillDate = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.BillDateTime = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.OrderedDate = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.InvoiceNo = this.loginfo.storeId + moment().format('YYYYMMDD') + '/' + this.order.OrderNo
     this.updateorderno()
     console.log(this.order.InvoiceNo)
@@ -605,7 +605,8 @@ export class SaleComponent implements OnInit {
     this.order.StoreId = this.loginfo.storeId
     this.printreceipt()
     this.order.CustomerDetails.CompanyId = this.loginfo.companyId
-    this.order.CustomerDetails.StoreId = this.loginfo.StoreId
+    this.order.CustomerDetails.StoreId = this.loginfo.storeId
+    this.order.CustomerDetails.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.OrderedById = 18
     this.order.ProdStatus = '1'
     this.order.WipStatus = '1'
@@ -619,7 +620,7 @@ export class SaleComponent implements OnInit {
         transaction.CustomerId = this.order.CustomerDetails.Id
         transaction.TranstypeId = 1
         transaction.PaymentStatusId = 0
-        transaction.TransDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+        transaction.TransDateTime = moment().format('YYYY-MM-DD HH:MM:ss')
         transaction.TransDate = moment().format('YYYY-MM-DD')
         transaction.UserId = this.order.UserId
         transaction.CompanyId = this.loginfo.companyId
@@ -648,16 +649,15 @@ export class SaleComponent implements OnInit {
       console.log(data)
       this.sync.sync()
       this.order = new OrderModule(6)
-
     })
     this.addcustomer()
     this.notification.success('Ordered Saved successfully!', `Ordered Saved successfully.`)
   }
-  syncDB(){
-      this.Auth.getstoredata(this.CompanyId, this.StoreId, 1).subscribe(data1 => {
-        console.log(data1)
-        this.Auth.getstoredatadb(data1).subscribe(d => {})
-      })
+  syncDB() {
+    this.Auth.getstoredata(this.CompanyId, this.StoreId, 1).subscribe(data1 => {
+      console.log(data1)
+      this.Auth.getstoredatadb(data1).subscribe(d => { })
+    })
   }
   crossclick() {
     this.temporaryItem = { DiscAmount: 0, Quantity: null, DiscPercent: 0 }

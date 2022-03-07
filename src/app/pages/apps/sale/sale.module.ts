@@ -143,7 +143,7 @@ export class OrderModule {
     this.WipStatus = ''
   }
 
-  addproduct(product,showname) {
+  addproduct(product, showname) {
     this.Items.push(new OrderItemModule(product, showname))
     this.setbillamount()
   }
@@ -298,7 +298,7 @@ export class OrderItemModule {
     this.BillId = 0
     this.BarcodeId = product.barcodeId
     this.CancelledQuantity = 0
-    this.CreatedDate = ''
+    // this.CreatedDate = ''
     this.CurrentStock = 0
     this.ComplementryQty = 0
     this.CompanyId = 1
@@ -324,8 +324,7 @@ export class OrderItemModule {
     this.PendingQty = 0
     this.Price = +product.price
     // console.log(this.quantity)
-    this.quantity = product.quantity
-
+    // this.quantity = product.quantity
     this.ReceivedQuantity = 0
     this.ReturnedQuantity = 0
     this.ReceiveLaterQuantity = 0
@@ -393,7 +392,7 @@ export class OrderItemDetailModule {
     this.Date = ''
     this.DateTime = ''
     this.RelatedOrderId = ''
-    this.CreatedDate = ''
+    // this.CreatedDate = ''
     this.CreatedBy = 0
     this.DiscAmount = 0
     this.DiscPercent = 0
@@ -415,11 +414,13 @@ export class CustomerModule {
   CompanyId: number
   StoreId: number
   val: number
+  CreatedDate: string
   datastatus: string
   constructor() {
     this.Id = null
     this.Name = ''
     this.Email = ''
+    // this.CreatedDate = ''
     this.PhoneNo = ''
     this.Address = ''
     this.City = ''
