@@ -96,7 +96,7 @@ export class ProductsComponent implements OnInit {
       this.CompanyId = this.loginfo.CompanyId
       this.StoreId = this.loginfo.StoreId
       console.log(this.loginfo)
-      this.getMasterproduct()     
+      this.getMasterproduct()
       this.getproducttype()
       this.getUnits()
       this.gettax()
@@ -138,8 +138,10 @@ export class ProductsComponent implements OnInit {
     console.log(bool)
     if (bool) {
       this.prod = this.masterproduct.products.filter(x => !x.isactive)
+      
     } else {
       this.prod = this.masterproduct.products.filter(x => x.isactive)
+      
     }
     console.log(this.prod.length)
   }
@@ -148,6 +150,8 @@ export class ProductsComponent implements OnInit {
     this.Auth.getProduct(this.id, this.loginfo.companyId).subscribe(data => {
       this.masterproduct = data
       this.prod = this.masterproduct.products.filter(x => x.isactive)
+      this.prod = this.masterproduct.products.filter(x => !x.isactive)
+
       console.log(this.prod)
     })
   }

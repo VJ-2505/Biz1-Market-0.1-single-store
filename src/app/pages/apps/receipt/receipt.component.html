@@ -94,52 +94,58 @@
       <br><br>
     </div>
     <br>
-    <div class="row w-100 mx-0 mb-5 col-xl-12">
+    <!-- <div class="row w-100 mx-0 mb-5 col-xl-12">
       <div class="col-xl-12 pl-0 pr-0">
         <div class="table-wrap" *ngIf="receipts!=undefinde">
-          <div class="table-responsive" *ngIf="receipts?.receipts.length>0;else emptyreceipt">
-            <table class="table mb-0 text-center">
-              <thead>
-                <tr>
-                  <th>InvoiceNo</th>
-                  <th>BillAmount</th>
-                  <th>paidAmount</th>
-                  <th>Payment Status</th>
-                  <!-- <th>Order Status</th> -->
-                  <th>Customer Details</th>
-                  <th>orderedDate</th>
+          <div class="table-responsive" *ngIf="receipts?.receipts.length>0;else emptyreceipt"> -->
+    <!-- <table class="table mb-0 text-center"> -->
+    <div class="card">
+      <div class="card-body">
+        <nz-table #receiptsTbl [nzData]="receipts.receipts" class="kit__utils__table mb-4">
+          <thead>
+            <tr>
+              <th>InvoiceNo</th>
+              <th>BillAmount</th>
+              <th>paidAmount</th>
+              <th>Payment Status</th>
+              <!-- <th>Order Status</th> -->
+              <th>Customer Details</th>
+              <th>orderedDate</th>
 
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let orders of receipts.receipts ;let i=index">
-                  <td><button type="button" class="btn btn-link"
-                      (click)="parseOrder(orders.orderJson)">{{orders.invoiceNo}}</button>
-                  </td>
-                  <td>{{orders.billAmount}}</td>
-                  <td>{{orders.paidAmount}}</td>
-                  <td>
-                    <span *ngIf="orders.OrderStatusId != -1 && orders.BillAmount == orders.PaidAmount"
-                      class="badge badge-success mr-10">Paid</span>
-                    <span *ngIf="orders.OrderStatusId != -1 && orders.BillAmount > orders.PaidAmount"
-                      class="badge badge-warning mr-10">Pending</span>
-                    <span *ngIf="orders.OrderStatusId == -1" class="badge badge-danger mr-10">Cancelled</span>
-                    <span *ngIf="orders.OrderStatusId != -1 && orders.BillAmount < orders.PaidAmount"
-                      class="badge badge-danger mr-10">Refundable</span>
-                  </td>
-                  <!-- <td><span *ngIf="orders.OrderStatusId == 5">Completed</span>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let orders of  receiptsTbl.data ;let i=index">
+              <td><button type="button" class="btn btn-link"
+                  (click)="parseOrder(orders.orderJson)">{{orders.invoiceNo}}</button>
+              </td>
+              <td>{{orders.billAmount}}</td>
+              <td>{{orders.paidAmount}}</td>
+              <td>
+                <span *ngIf="orders.OrderStatusId != -1 && orders.BillAmount == orders.PaidAmount"
+                  class="badge badge-success mr-10">Paid</span>
+                <span *ngIf="orders.OrderStatusId != -1 && orders.BillAmount > orders.PaidAmount"
+                  class="badge badge-warning mr-10">Pending</span>
+                <span *ngIf="orders.OrderStatusId == -1" class="badge badge-danger mr-10">Cancelled</span>
+                <span *ngIf="orders.OrderStatusId != -1 && orders.BillAmount < orders.PaidAmount"
+                  class="badge badge-danger mr-10">Refundable</span>
+              </td>
+              <!-- <td><span *ngIf="orders.OrderStatusId == 5">Completed</span>
                     <span *ngIf="orders.OrderStatusId != -1 && orders.OrderStatusId != 5">Pending</span>
                     <span *ngIf="orders.OrderStatusId == -1">Cancelled</span>
                   </td> -->
-                  <td>
-                    {{orders.customerName==null?"-":orders.customerName}}/{{orders.customerPhone==null?"-":orders.customerPhone}}
+              <td>
+                {{orders.customerName==null?"-":orders.customerName}}/{{orders.customerPhone==null?"-":orders.customerPhone}}
 
-                  </td>
-                  <td>{{orders.orderedDateTime | date: 'MMM d, h:mm a'}}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="text-center">
+              </td>
+              <td>{{orders.orderedDateTime | date: 'MMM d, h:mm a'}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+    <!-- </table> -->
+    <!-- <div class="text-center">
               <button [class.disabled]="LastId" [ngClass]="{'text-blue': !LastId}" class="btn btn-link"
                 (click)="nextRecipts('prev')">Previous</button>
               <button [class.disabled]="FirstId" [ngClass]="{'text-blue': !FirstId}" class="btn btn-link text-blue"
@@ -151,7 +157,7 @@
           </ng-template>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div class="container" *ngIf="show==1">
     <!-- Title -->

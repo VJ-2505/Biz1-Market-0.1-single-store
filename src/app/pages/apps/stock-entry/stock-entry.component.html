@@ -384,7 +384,7 @@
                             </td>
                             <td>
                                 <input class="form-control" [disabled]="barcode.quantity == 0"
-                                    [(ngModel)]="barcode.stockquantity" type="number" placeholder="Qty" min="1"
+                                    [(ngModel)]="barcode.stockquantity" type="number" placeholder="Qty" 
                                     max="barcode.quantity"
                                     [ngClass]="{'is-invalid': (submitted && barcode.selected && !barcode.stockquantity >0) || barcode.stockquantity > barcode.quantity }" />
                                 <span *ngIf="barcode.stockquantity > barcode.quantity"

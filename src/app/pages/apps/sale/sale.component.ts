@@ -58,6 +58,7 @@ export class SaleComponent implements OnInit {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
+    // console.log(event)
     let data = this.buffer || ''
     if (event.key !== 'Enter' && event.key !== 'Shift') {
       if (this.isuppercase) {
@@ -71,9 +72,11 @@ export class SaleComponent implements OnInit {
       this.isuppercase = true
     } else {
       this.buffer = ''
+      // console.log(data)
+      this.barcodeMode = true
       this.setproductbybarcode(data)
     }
-    console.log(this.isuppercase)
+    console.log(data)
   }
   scrollContainer: any
   products: any
@@ -111,7 +114,7 @@ export class SaleComponent implements OnInit {
       value: '+982',
     },
   ]
-  temporaryItem: any = { DiscAmount: null, DiscPercent: 0 }
+  temporaryItem: any = { DiscAmount: null, Quantity: null, DiscPercent: 0 }
   barcodeItem = { quantity: null, tax: 0, amount: 0, price: 0, Tax1: 0, Tax2: 0 }
   barcodemode: boolean = false
   customerdetails = {
@@ -136,7 +139,7 @@ export class SaleComponent implements OnInit {
               v =>
                 (v.product.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
                   v.barCode?.toLowerCase().indexOf(term.toLowerCase()) > -1) &&
-                v.quantity > 0,
+                v.quantity > 0 && !this.barcodeMode,
             )
             .slice(0, 10),
       ),
@@ -166,7 +169,7 @@ export class SaleComponent implements OnInit {
       this.CompanyId = this.loginfo.CompanyId
       this.StoreId = this.loginfo.StoreId
       this.orderkeyValidation()
-      console.log(this.loginfo)
+      // console.log(this.loginfo)
     })
     this.orderkey = localStorage.getItem('orderkey')
       ? JSON.parse(localStorage.getItem('orderkey'))
@@ -179,9 +182,9 @@ export class SaleComponent implements OnInit {
       this.getproducts()
       this.getcustomers()
       this.GetStorePaymentType()
-      // this.temporaryItem.Quantity = 0
+      this.temporaryItem.Quantity = null
       this.products.forEach(product => {
-        product.Quantity = 0
+        product.Quantity = null
         product.tax = 0
         product.amount = 0
       })
@@ -201,9 +204,9 @@ export class SaleComponent implements OnInit {
     this.orderkey.orderno++
     localStorage.setItem('orderkey', JSON.stringify(this.orderkey))
     this.Auth.updateorderkey(this.orderkey).subscribe(data => {
-      console.log(data)
+      // console.log(data)
     })
-    console.log(this.orderkey)
+    // console.log(this.orderkey)
   }
 
   getproducts() {
@@ -218,7 +221,7 @@ export class SaleComponent implements OnInit {
   }
 
   orderlogging(eventname) {
-    console.log(this.orderkey.orderno)
+    // console.log(this.orderkey.orderno)
     var logdata = {
       event: eventname,
       orderjson: JSON.stringify(this.order),
@@ -228,7 +231,7 @@ export class SaleComponent implements OnInit {
     }
     this.Auth.logorderevent(logdata).subscribe(data => {
 
-      console.log(data)
+      // console.log(data)
     })
 
   }
@@ -264,33 +267,26 @@ export class SaleComponent implements OnInit {
       }
       return r
     }, [])
-    console.log(this.groupedProducts)
+    // console.log(this.groupedProducts)
   }
+  barcodeMode: boolean = false
   setproductbybarcode(code) {
-    // console.log(code, this.products.filter(x => x.Product == code));
-    // var product = this.products.filter(x => x.Product == code)[0];
-    // if (product) {
-    //   this.temporaryItem = product;
-    //   this.temporaryItem.Quantity = 1;
-    //   this.temporaryItem.amount = this.temporaryItem.price * this.temporaryItem.Quantity
-    //   this.temporaryItem.tax = (this.temporaryItem.Tax1 + this.temporaryItem.Tax2) * this.temporaryItem.amount / 100
-    //   this.temporaryItem.amount = +this.temporaryItem.amount.toFixed(2)
-    //   this.temporaryItem.totalprice = +(this.temporaryItem.price * this.temporaryItem.quantity).toFixed(2)
-    //   if (this.order.Items.some(x => x.Id == this.temporaryItem["Id"])) {
-    //     this.order.Items.filter(x => x.Id == this.temporaryItem["Id"])[0].OrderQuantity += this.temporaryItem.Quantity
-    //   } else {
-    //     this.order.Items.push(Object.assign({}, this.temporaryItem));
-    //   }
-    //   this.calculate();
-    //   // this.temporaryItem = { DiscAmount: 0, Quantity: null, DiscPercent: 0 };
-    //   8901803000179
-    // }
+    this.barcodeMode = false
+    console.log(code, this.products.filter(x => x.barCode == code));
+    var product = this.products.filter(x => x.barCode == code)[0];
+    if (product) {
+      console.log(product);
+      this.temporaryItem = product;
+      this.temporaryItem.Quantity = 1;
+      this.temporaryItem.DiscAmount = 0
+      this.addItem()
+    }
   }
 
   getcustomers() {
     this.Auth.getcustomers().subscribe(data => {
       this.customers = data
-      console.log(data)
+      // // console.log(data)
     })
   }
   savedata() {
@@ -343,12 +339,12 @@ export class SaleComponent implements OnInit {
     this.order.CustomerDetails.datastatus = 'loading'
     if (this.customers.some(x => x.phoneNo == this.order.CustomerDetails.PhoneNo)) {
       var obj = this.customers.filter(x => x.phoneNo == this.order.CustomerDetails.PhoneNo)[0]
-      console.log(obj)
+      // console.log(obj)
       this.order.CustomerId = obj.id
       Object.keys(this.order.CustomerDetails).forEach(key => {
         this.order.CustomerDetails[key] = obj[key.charAt(0).toLowerCase() + key.slice(1)]
       })
-      console.log(this.order.CustomerDetails)
+      // console.log(this.order.CustomerDetails)
       this.order.CustomerDetails.datastatus = 'old'
     } else {
       this.order.CustomerDetails.datastatus = 'new'
@@ -378,11 +374,14 @@ export class SaleComponent implements OnInit {
   }
 
   submitted: boolean = false
-  batches:any = [];
+  batches: any = [];
   batchno = 0;
   addItem() {
     this.submitted = true
+    this.barcodeMode = false
     if (this.validation()) {
+      // console.log(this.temporaryItem)
+
       if (this.order.Items.some(x => x.stockBatchId == this.temporaryItem['stockBatchId'])) {
         this.order.Items.filter(x => x.stockBatchId == this.temporaryItem['stockBatchId'],)[0].OrderQuantity += this.temporaryItem.Quantity
         this.order.setbillamount()
@@ -392,73 +391,70 @@ export class SaleComponent implements OnInit {
       this.products.forEach(product => {
         if (product.stockBatchId == this.temporaryItem['stockBatchId']) {
           product.quantity -= this.temporaryItem.Quantity
+          // product.maxqty -= this.temporaryItem.Quantity
           Object.keys(product).forEach(key => {
-            this.temporaryItem[key] = product[key]      
-
+            this.temporaryItem[key] = product[key]
           })
         }
       })
-
-
       this.temporaryItem = { DiscAmount: null, Quantity: null, DiscPercent: 0 }
-      this.productinput['nativeElement'].focus()
+      // this.productinput['nativeElement'].focus()
       this.model = ''
       this.filteredvalues = []
       this.submitted = false
-      return
     }
 
   }
 
   getcustomerdetails(compid) {
     this.Auth.getcustomers().subscribe(data => {
-      console.log(compid)
+      // console.log(compid)
     })
   }
-  barcodereaded(event) {
-    var product = this.products.filter(x => x.Id == +event.element.nativeElement.id)[0]
-    this.inputValue = product.Product
-    this.barcodeItem = product
-    this.barcodeItem.quantity = 1
-    if (this.cartitems.some(x => x.Id == this.barcodeItem['Id'])) {
-      this.cartitems.filter(
-        x => x.Id == this.barcodeItem['Id'],
-      )[0].quantity += this.barcodeItem.quantity
-    } else {
-      this.cartitems.push(Object.assign({}, this.barcodeItem))
-    }
-    this.calculate()
-    this.barcodeItem = { quantity: null, tax: 0, amount: 0, price: 0, Tax1: 0, Tax2: 0 }
-    this.barcValue = ''
-  }
+  // barcodereaded(event) {
+  //   var product = this.products.filter(x => x.Id == +event.element.nativeElement.id)[0]
+  //   this.inputValue = product.Product
+  //   this.barcodeItem = product
+  //   this.barcodeItem.quantity = 1
+  //   if (this.cartitems.some(x => x.Id == this.barcodeItem['Id'])) {
+  //     this.cartitems.filter(x => x.Id == this.barcodeItem['Id'],)[0].quantity += this.barcodeItem.quantity
+  //   } else {
+  //     this.cartitems.push(Object.assign({}, this.barcodeItem))
+  //   }
+  //   this.calculate()
+  //   this.barcodeItem = { quantity: 0, tax: 0, amount: 0, price: 0, Tax1: 0, Tax2: 0 }
+  //   this.barcValue = ''
+  // }
+
+
   quantitychange(Items: OrderItemModule, event) {
-
-    console.log(Items, event)
-
-    console.log(this.products)
+    console.log(Items, this.validation())
+    // console.log(this.products)
+    // if (this.validation()) {
     var prod = this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0]
-    console.log(Items.OrderQuantity, prod.maxqty)
-    console.log(this.products)
-
+    // console.log(Items.OrderQuantity, prod.maxqty)
+    // console.log(this.products)
     if (Items.OrderQuantity && Items.OrderQuantity <= prod.maxqty) {
-      console.log('%c GOOD! ', 'color: #bada55')
+      // console.log('%c GOOD! ', 'color: #bada55')
       this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0].quantity = prod.maxqty - Items.OrderQuantity
       this.order.setbillamount()
     } else if (Items.OrderQuantity == 0 || Items.OrderQuantity == null) {
       event.preventDefault()
-      console.log('%c VERY LOW! ', 'color: orange')
+      // console.log('%c VERY LOW! ', 'color: orange')
       Items.OrderQuantity = 1
       this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0].quantity = prod.maxqty - 1
       this.order.setbillamount()
     } else {
       event.preventDefault()
-      console.log('%c EXCEED! ', 'color: red')
+      // console.log('%c EXCEED! ', 'color: red')
       Items.OrderQuantity = 1
       this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0].quantity = prod.maxqty - 1
       this.order.setbillamount()
     }
-    // this.addItem() 
-    console.log(Items.OrderQuantity)
+    // }
+    // console.log(Items.OrderQuantity)
+    // this.calculate()
+    this.buffer = ""
   }
   delete(index) {
     this.products.forEach(prod => {
@@ -494,7 +490,7 @@ export class SaleComponent implements OnInit {
   }
   date = new Date()
   onChange(e) {
-    console.log(e, moment(e), this.date)
+    // console.log(e, moment(e), this.date)
   }
   showModal(): void {
     this.isVisible = true
@@ -516,27 +512,27 @@ export class SaleComponent implements OnInit {
   ////////////////////////////////////////dfgdfhsfhgj?//////////////////////////////////
   batchproduct: any = []
   selectedItem(batchproduct, barcodeId) {
-    this.batchproduct = this.products.filter(x => x.barcodeId == barcodeId)
+
+    // console.log(this.products)
+    this.batchproduct = this.products.filter(x => x.barcodeId == barcodeId && x.quantity > 0)
     if (this.batchproduct.length > 1) {
       this.modalService.open(batchproduct, { centered: true })
     } else {
       this.selectedproduct(this.batchproduct[0])
     }
     this.quantityel['nativeElement'].focus()
-
   }
   selectedproduct(product) {
-    console.log(product)
+    // console.log(product)
     Object.keys(product).forEach(key => {
       this.temporaryItem[key] = product[key]
     })
     this.modalService.dismissAll()
-    // this.addItem()
   }
   validation() {
     var isvalid = true
     if (this.temporaryItem.Quantity <= 0) isvalid = false
-    if (this.temporaryItem.Quantity > this.temporaryItem.Quantity) isvalid = false
+    if (this.temporaryItem.Quantity > this.temporaryItem.quantity) isvalid = false
     return isvalid
   }
 
@@ -589,23 +585,24 @@ export class SaleComponent implements OnInit {
 
   // saveOrder
   saveOrder() {
-    console.log(this.order)
+    // console.log(this.order)
     this.order.OrderNo = this.orderkey.orderno
-    this.order.BillDate = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.CreatedDate = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.BillDateTime = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.OrderedDate = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:mm A')
-    this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.BillDate = moment().format('YYYY-MM-DD hh:mm A')
+    this.order.CreatedDate = moment().format('YYYY-MM-DD hh:mm A')
+    this.order.BillDateTime = moment().format('YYYY-MM-DD hh:mm A')
+    this.order.OrderedDate = moment().format('YYYY-MM-DD hh:mm A')
+    this.order.OrderedDateTime = moment().format('YYYY-MM-DD hh:mm A')
+    this.order.DeliveryDateTime = moment().format('YYYY-MM-DD hh:mm A')
+    this.order.ModifiedDate = moment().format('YYYY-MM-DD hh:MM A')
     this.order.InvoiceNo = this.loginfo.storeId + moment().format('YYYYMMDD') + '/' + this.order.OrderNo
     this.updateorderno()
-    console.log(this.order.InvoiceNo)
+    // console.log(this.order.InvoiceNo)
     this.order.CompanyId = this.loginfo.companyId
     this.order.StoreId = this.loginfo.storeId
     this.printreceipt()
     this.order.CustomerDetails.CompanyId = this.loginfo.companyId
-    this.order.CustomerDetails.StoreId = this.loginfo.StoreId
+    this.order.CustomerDetails.StoreId = this.loginfo.storeId
+    this.order.CustomerDetails.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.OrderedById = 18
     this.order.ProdStatus = '1'
     this.order.WipStatus = '1'
@@ -619,7 +616,7 @@ export class SaleComponent implements OnInit {
         transaction.CustomerId = this.order.CustomerDetails.Id
         transaction.TranstypeId = 1
         transaction.PaymentStatusId = 0
-        transaction.TransDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+        transaction.TransDateTime = moment().format('YYYY-MM-DD HH:MM:ss')
         transaction.TransDate = moment().format('YYYY-MM-DD')
         transaction.UserId = this.order.UserId
         transaction.CompanyId = this.loginfo.companyId
@@ -642,22 +639,21 @@ export class SaleComponent implements OnInit {
         })
       }
     }
-    console.log(this.order.CustomerDetails)
+    // console.log(this.order.CustomerDetails)
     localStorage.setItem('lastorder', JSON.stringify(this.order))
     this.Auth.saveordertonedb(this.order).subscribe(data => {
-      console.log(data)
+      // console.log(data)
       this.sync.sync()
       this.order = new OrderModule(6)
-
     })
     this.addcustomer()
     this.notification.success('Ordered Saved successfully!', `Ordered Saved successfully.`)
   }
-  syncDB(){
-      this.Auth.getstoredata(this.CompanyId, this.StoreId, 1).subscribe(data1 => {
-        console.log(data1)
-        this.Auth.getstoredatadb(data1).subscribe(d => {})
-      })
+  syncDB() {
+    this.Auth.getstoredata(this.CompanyId, this.StoreId, 1).subscribe(data1 => {
+      // console.log(data1)
+      this.Auth.getstoredatadb(data1).subscribe(d => { })
+    })
   }
   crossclick() {
     this.temporaryItem = { DiscAmount: 0, Quantity: null, DiscPercent: 0 }
@@ -680,7 +676,7 @@ export class SaleComponent implements OnInit {
   storePaymentTypes: any = []
   GetStorePaymentType() {
     this.Auth.getstorepaymentType(0).subscribe(data => {
-      console.log(data)
+      // console.log(data)
       this.storePaymentTypes = data
     })
   }
@@ -751,15 +747,15 @@ export class SaleComponent implements OnInit {
   }
 
   printreceipt() {
-    // console.log(this.order.AllItemDisc, this.order.AllItemTaxDisc, this.order.AllItemTotalDisc)
-    console.log(
-      this.order.OrderDiscount,
-      this.order.OrderTaxDisc,
-      this.order.OrderTotDisc,
-      this.order.InvoiceNo,
-    )
+    // // console.log(this.order.AllItemDisc, this.order.AllItemTaxDisc, this.order.AllItemTotalDisc)
+    // console.log(
+    //   this.order.OrderDiscount,
+    //   this.order.OrderTaxDisc,
+    //   this.order.OrderTotDisc,
+    //   this.order.InvoiceNo,
+    // )
     this.orderlogging('receipt_print')
-    console.log(this.order.InvoiceNo)
+    // console.log(this.order.InvoiceNo)
     var printtemplate = `
     <div id="printelement">
     <div class="header">
@@ -867,7 +863,7 @@ export class SaleComponent implements OnInit {
       </div>
     </div>`
     printtemplate += this.printhtmlstyle
-    console.log(printtemplate)
+    // console.log(printtemplate)
     if (this.printersettings) {
       this.printservice.print(printtemplate, [this.printersettings.receiptprinter])
     }

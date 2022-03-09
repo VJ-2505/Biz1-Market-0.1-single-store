@@ -34,7 +34,7 @@ export class OrderModule {
     DeliveryDateTime: string;
     BillDateTime: string;
     BillDate: string;
-     Note: string;
+    Note: string;
     OrderStatusDetails: string;
     RiderStatusDetails: string;
     FoodReady: boolean = false;
@@ -52,13 +52,13 @@ export class OrderModule {
     WipStatus: string;
     ProdStatus: string;
     Items: Array<OrderItemModule>;
-    OrderDetail:Array<OrderItemDetailModule>;
+    OrderDetail: Array<OrderItemDetailModule>;
     Subtotal: number
     TaxAmount: number
-    BatchNo:number
+    BatchNo: number
     constructor(ordertype) {
         this.Items = [];
-        this.OrderDetail =[];
+        this.OrderDetail = [];
         this.Updated = false;
         this.OrderNo = 0;
         this.InvoiceNo = 0;
@@ -114,7 +114,7 @@ export class OrderModule {
         this.OrderedById = 0;
         // this.OrderStatus = 0;
         // this.DispatchStatus = 0;
-    //  this.ReceiveStatus = 0;
+        //  this.ReceiveStatus = 0;
         // this.CancelStatus = 0;
         this.SpecialOrder = false;
         this.WipStatus = '';
@@ -161,7 +161,7 @@ export class OrderItemModule {
     Updated: boolean = false;
     DiscPercent: number;
     DiscAmount: number;
-    Status:number;
+    Status: number;
     // ItemDiscount: number;
     // TaxItemDiscount: number;
     // OrderDiscount: number;
@@ -171,7 +171,7 @@ export class OrderItemModule {
     // KOTId: number;
     Note: string;
     Message: string;
-     TotalAmount: number;
+    TotalAmount: number;
     // Extra: number;
     // CategoryId: number;
     OptionJson: string;
@@ -179,9 +179,9 @@ export class OrderItemModule {
     OrderItemId: number;
     OrderId: number;
     ProductId: number;
-     OrderQuantity: number;
-     DispatchedQuantity: number;
- ReceivedQuantity: number;
+    OrderQuantity: number;
+    DispatchedQuantity: number;
+    ReceivedQuantity: number;
     // ReturnedQuantity: number;
     // CancelledQuantity: number;
     // ReceiveLaterQuantity: number;
@@ -205,18 +205,18 @@ export class OrderItemModule {
     CompanyId: number;
     VarianceReasonStr: string
     VarianceReasonDesc: string;
- BarcodeId: number;
+    BarcodeId: number;
     TaxAmount1: number;
     TaxAmount2: number;
     TaxAmount3: number;
     IsInclusive: boolean;
-    RefId:string;
+    RefId: string;
     constructor(product) {
         console.log(product)
         this.Id = 0;
         this.Updated = false;
         this.DiscPercent = 0;
-        this.Status =0;
+        this.Status = 0;
         // this.ItemDiscount = 0;
         // this.TaxItemDiscount = 0;
         // this.OrderDiscount = 0;
@@ -233,8 +233,8 @@ export class OrderItemModule {
         // this.ComplementryQty = 0;
         this.OrderItemId = 0;
         this.OrderId = 0;
-         this.DispatchedQuantity = 0;
-     this.ReceivedQuantity = 0;
+        this.DispatchedQuantity = 0;
+        this.ReceivedQuantity = 0;
         // this.ReturnedQuantity = 0;
         // this.CancelledQuantity = 0;
         // this.ReceiveLaterQuantity = 0;
@@ -266,7 +266,7 @@ export class OrderItemModule {
         this.Tax3 = product.tax3;
         this.Tax4 = 0;
         this.IsInclusive = product.isInclusive;
-        this.RefId = product.productId+moment().format('YYYY-MM-DD HH:MM A');
+        this.RefId = product.productId + moment().format('YYYY-MM-DD HH:MM A');
     }
 }
 export class OrderItemDetailModule {
@@ -287,7 +287,7 @@ export class OrderItemDetailModule {
     TaxAmount: number;
     Date: string;
     DateTime: string;
-    RelatedOrderId: string ;
+    RelatedOrderId: string;
     CreatedDate: string;
     // CreatedBy: number;
     DiscAmount: number;
@@ -295,7 +295,7 @@ export class OrderItemDetailModule {
     DiscPerQty: number;
     // AutoOrderId: number;
     CompanyId: number;
-    OrderItemRefId:string;
+    OrderItemRefId: string;
     // VarianceReasonStr: string;
     // VarianceReasonDesc: string
     constructor(product) {
@@ -318,13 +318,13 @@ export class OrderItemDetailModule {
         this.DateTime = '';
         this.RelatedOrderId = '';
         this.CreatedDate = '';
-         this.BatchId = 0;
+        this.BatchId = 0;
         this.DiscAmount = 0;
         this.DiscPercent = 0;
         this.DiscPerQty = 0;
-         this.ActualProdId = product.productId;
+        this.ActualProdId = product.productId;
         this.CompanyId = 1;
-        this.OrderItemRefId = product.productId+moment().format('YYYY-MM-DD HH:MM A');
+        this.OrderItemRefId = product.productId + moment().format('YYYY-MM-DD HH:MM A');
 
         // this.VarianceReasonStr = '';
         // this.VarianceReasonDesc = '';
@@ -358,52 +358,52 @@ export class CustomerModule {
     }
 }
 
-    export class OrdModule {
-        SuppliedById: number;
-        OrderedById: number;
-        DelivDateTime: string;
-        OrderedDateTime: string;
-        OrderType: number;
-        OrderStatus: number;
-        DispatchStatus: number;
-        ReceiveStatus: number;
-        CompanyId: number;
-        CancelStatus: number;
-        OrderedDate: string;
-        createdBy: number;
-        refId:number;
-        constructor() {
-            this.OrderedById = null;
-            this.SuppliedById = null;
-            this.DelivDateTime = "";
-            this.OrderedDateTime = "";
-            this.OrderType = null;
-            this.OrderStatus = null;
-            this.DispatchStatus = null;
-            this.ReceiveStatus = null;
-            this.CompanyId = 0;
-            this.CancelStatus = 0;
-            this.OrderedDate = "";
-            this.refId =0;
-        }
+export class OrdModule {
+    SuppliedById: number;
+    OrderedById: number;
+    DelivDateTime: string;
+    OrderedDateTime: string;
+    OrderType: number;
+    OrderStatus: number;
+    DispatchStatus: number;
+    ReceiveStatus: number;
+    CompanyId: number;
+    CancelStatus: number;
+    OrderedDate: string;
+    createdBy: number;
+    refId: number;
+    constructor() {
+        this.OrderedById = null;
+        this.SuppliedById = null;
+        this.DelivDateTime = "";
+        this.OrderedDateTime = "";
+        this.OrderType = null;
+        this.OrderStatus = null;
+        this.DispatchStatus = null;
+        this.ReceiveStatus = null;
+        this.CompanyId = 0;
+        this.CancelStatus = 0;
+        this.OrderedDate = "";
+        this.refId = 0;
     }
-
-    
-export class DelModule {
-compId:number;
-Items:[];
-draft:string;
-orderJson:[];
-Id:number;
-ordItemId:number;
-ItemDetail:[];
-constructor(compId,finArr,date,data,OrdDetail) {
-    this.compId = compId;
-    this.Items =finArr;
-    this.draft =date;
-    this.orderJson =data;
-    this.Id = 0;
-    this.ItemDetail = OrdDetail;
-    this.ordItemId =0;
 }
+
+
+export class DelModule {
+    compId: number;
+    Items: [];
+    draft: string;
+    orderJson: [];
+    Id: number;
+    ordItemId: number;
+    ItemDetail: [];
+    constructor(compId, finArr, date, data, OrdDetail) {
+        this.compId = compId;
+        this.Items = finArr;
+        this.draft = date;
+        this.orderJson = data;
+        this.Id = 0;
+        this.ItemDetail = OrdDetail;
+        this.ordItemId = 0;
+    }
 }

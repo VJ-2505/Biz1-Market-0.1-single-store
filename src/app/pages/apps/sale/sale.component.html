@@ -29,7 +29,7 @@
                                             [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > temporaryItem.quantity}"
                                             [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()"
                                             placeholder="Qty" class="form-control"
-                                            (keyup.enter)="temporaryItem.Quantity>0&&discel.focus()" min="1" />
+                                            (keyup.enter)="temporaryItem.Quantity>0&&discel.focus()" />
                                     </div>
                                 </td>
                                 <td>
@@ -276,7 +276,7 @@
                             </td>
                             <td>
                                 <input type="number" nz-input [(ngModel)]="item.OrderQuantity"
-                                    (keyup)="quantitychange(Items,$event);" onfocus="this.select()">
+                                    (keyup)="quantitychange(item,$event);" (change)="quantitychange(item,$event);" onfocus="this.select()">
                             </td>
                             <td>
                                 &#8377; {{item.Price}}

@@ -54,12 +54,20 @@ export class CategoryComponent implements OnInit {
     //   this.getcategorybyid();
     // }
   }
-
+  StoreId: any
   ngOnInit(): void {
-    this.getCategory();
-    this.getpcategories();
-    this.getvariantgroups();
-    this.getcatactive()
+
+    this.Auth.getdbdata(['loginfo', 'printersettings']).subscribe(data => {
+      this.loginfo = data['loginfo'][0]
+      this.CompanyId = this.loginfo.CompanyId
+      this.StoreId = this.loginfo.StoreId
+      console.log(this.loginfo)
+      this.getCategory();
+      this.getpcategories();
+      this.getvariantgroups();
+      this.getcatactive()
+    })
+
   }
 
   getCategory() {
@@ -89,7 +97,7 @@ export class CategoryComponent implements OnInit {
     this.Auth.getcategorybyid(id).subscribe(data => {
       this.category = data;
       console.log(this.category)
-      // this.show = !this.show;
+      this.show = !this.show;
     })
   }
   back() {
@@ -192,7 +200,7 @@ export class CategoryComponent implements OnInit {
   // Active in active
 
   getcatactive() {
-    this.Auth.catactive(this.companyid = 1).subscribe(data => {
+    this.Auth.catactive(this.loginfo.companyId).subscribe(data => {
       this.categoryact = data
       this.Category = this.categoryact.filter(x => x.isactive == !this.showInactive)
       console.log(this.categoryact);

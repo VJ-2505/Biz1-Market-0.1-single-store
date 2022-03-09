@@ -276,6 +276,12 @@ export const getMenuData: any[] = [
   //   key: 'extraAppsWordpressAdd',
   //   url: '/apps/wordpress-add',
   // },
+    {
+    title: 'Pricing Tables',
+    key: 'pricingTables',
+    icon: 'fe fe-command',
+    url: '/advanced/pricing-tables',
+  },
   {
     title: 'About Us',
     icon: 'fe fe-alert-octagon',
