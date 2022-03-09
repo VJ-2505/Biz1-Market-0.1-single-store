@@ -319,7 +319,10 @@ export class OrderItemModule {
     this.OrderLevel = 0
     this.OldStock = 0
     this.OrderQuantity = product.Quantity
-    this.ProductName = product.product
+    this.ProductName = product.product                   
+
+
+    
     this.ProductId = product.productId
     this.PendingQty = 0
     this.Price = +product.price

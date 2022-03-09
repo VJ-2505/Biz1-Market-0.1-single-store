@@ -608,7 +608,7 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'Customer/GetIndex?CompanyId=' + CompanyId + '&StoreId=' + StoreId,)
   }
   UpdateCustomer(data) {
-    return this.http.post(this.base_url1 + 'Customer/Update', data)
+    return this.http.post(this.base_url1 + 'Customer/Update', data)                   
   }
   Deletecustomer(Id) {
     return this.http.get(this.base_url1 + 'Customer/Delete?Id=' + Id)

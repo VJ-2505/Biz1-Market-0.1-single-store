@@ -265,7 +265,7 @@ export class SaleComponent implements OnInit {
         helper[key] = Object.assign({}, o) // create a copy of o
         r.push(helper[key])
       }
-      return r
+      return r   
     }, [])
     // console.log(this.groupedProducts)
   }
